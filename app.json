@@ -1,0 +1,48 @@
+{
+  "configVersion": "v3",
+  "app": {
+    "appId": 1079839,
+    "appName": "P-Tek",
+    "appType": "watchface",
+    "version": {
+      "code": 3,
+      "name": "1.0.1"
+    },
+    "vender": "Sebo",
+    "description": "Classic, pro-trek inspired watchface.",
+    "icon": "preview.png"
+  },
+  "permissions": [],
+  "runtime": {
+    "apiVersion": {
+      "minVersion": "3.0",
+      "compatible": "3.0",
+      "target": "3.0"
+    }
+  },
+  "targets": {
+    "default": {
+      "module": {
+        "watchface": {
+          "path": "watchface/index",
+          "main": 1,
+          "editable": 0,
+          "lockscreen": 1
+        }
+      },
+      "platforms": [
+        {
+          "st": "r"
+        }
+      ],
+      "designWidth": 480
+    }
+  },
+  "i18n": {
+    "en-US": {
+      "name": "P-Tek"
+    }
+  },
+  "defaultLanguage": "en-US",
+  "debug": false
+}
