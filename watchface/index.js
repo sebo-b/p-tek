@@ -225,17 +225,27 @@ WatchFace({
       minute_path: 'm_hand.png',
       minute_cover_x: 0,
       minute_cover_y: 0,
-      second_centerX: 240,
+/*      second_centerX: 240,
       second_centerY: 240,
       second_posX: 12,
       second_posY: 178,
       second_path: 's_hand.png',
       second_cover_x: 0,
       second_cover_y: 0,
-      enable: false,
+      enable: false,*/
       show_level: hmUI.show_level.ONLY_NORMAL
     }); 
 
+    hmUI.createWidget(hmUI.widget.IMG, {
+      x: 0,
+      y: 0,
+      src: "s_hand.png",
+      pos_x: 12,
+      pos_y: 178,
+      center_x: 240,
+      center_y: 240
+    });
+    
     hmUI.createWidget(hmUI.widget.FILL_RECT, {
       x: 0,
       y: 0,
