@@ -29,10 +29,10 @@ const nums = [
 ];
 
 const lcdIndPos = {
-  x: 95,
-  y: 346,
-  w: 290,
-  h: 75
+  x: 73,
+  y: 313,
+  w: 334,
+  h: 92
 };
 
 
@@ -63,49 +63,23 @@ WatchFace({
       show_level: hmUI.show_level.ONLY_AOD
     });
 
-    /*hmUI.createWidget(hmUI.widget.FILL_RECT, {
-      x: 0,
-      y: 100,
-      w: 480,
-      h: 50,
-      color: "0xFFFF0000",
-      show_level: hmUI.show_level.ONLY_NORMAL,
-    });*/
-
     let statusWid = [];
-
-    const dateWidget = hmUI.createWidget(hmUI.widget.GROUP, lcdIndPos);
-
-    dateWidget.createWidget(hmUI.widget.IMG_DATE, {
-      day_startX: 186,
-      day_startY: 16,
-      day_en_array: nums,
-      show_level: hmUI.show_level.ONLY_NORMAL | hmUI.show_level.ONLY_AOD
-    });
-
-    dateWidget.createWidget(hmUI.widget.IMG_WEEK, {
-      x: 10,
-      y: 16,
-      week_en: weekdays,
-      show_level: hmUI.show_level.ONLY_NORMAL | hmUI.show_level.ONLY_AOD
-    })
-
-    statusWid.push(dateWidget);
-
-    statusWid.createInd = function(type,img) {
+    statusWid.createInd = function(type,img,unit,imp_unit) {
       const group = hmUI.createWidget(hmUI.widget.GROUP, lcdIndPos);
       group.createWidget(hmUI.widget.TEXT_IMG, {
-        x: 10,
-        y: 16,
-        w: lcdIndPos.w - 2*10,
+        x: 12,
+        y: 30,
+        w: lcdIndPos.w - 2*12,
         align_h: hmUI.align.RIGHT,
         type: type,
         font_array: nums,
+        unit_en: unit,
+        imperial_unit_en: imp_unit,
         show_level: hmUI.show_level.ONLY_NORMAL
       });
       group.createWidget(hmUI.widget.IMG, {
-        x: 10,
-        y: 4,
+        x: 0,
+        y: 7,
         src: img,
         show_level: hmUI.show_level.ONLY_NORMAL
       });       
@@ -113,10 +87,26 @@ WatchFace({
       this.push(group);   
     };
 
-    statusWid.createInd( hmUI.data_type.BATTERY,'lcd_ind/bat.png');
-    statusWid.createInd( hmUI.data_type.WEATHER_CURRENT,'lcd_ind/temp.png');
-    statusWid.createInd( hmUI.data_type.STEP,'lcd_ind/steps.png');
-    statusWid.createInd( hmUI.data_type.CAL,'lcd_ind/kcal.png');
+    const dateWidget = hmUI.createWidget(hmUI.widget.GROUP, lcdIndPos);
+    dateWidget.createWidget(hmUI.widget.IMG_DATE, {
+      day_startX: 227,
+      day_startY: 30,
+      day_en_array: nums,
+      show_level: hmUI.show_level.ONLY_NORMAL | hmUI.show_level.ONLY_AOD
+    });
+
+    dateWidget.createWidget(hmUI.widget.IMG_WEEK, {
+      x: 12,
+      y: 30,
+      week_en: weekdays,
+      show_level: hmUI.show_level.ONLY_NORMAL | hmUI.show_level.ONLY_AOD
+    })
+    statusWid.push(dateWidget);
+
+    statusWid.createInd( hmUI.data_type.BATTERY,'lcd_ind/lcd_bat.png',"numbers/unit_perc.png");
+    statusWid.createInd( hmUI.data_type.WEATHER_CURRENT,'lcd_ind/lcd_temp.png',"numbers/unit_c.png","numbers/unit_f.png");
+    statusWid.createInd( hmUI.data_type.STEP,'lcd_ind/lcd_steps.png');
+    statusWid.createInd( hmUI.data_type.CAL,'lcd_ind/lcd_kcal.png');
 
     const button = hmUI.createWidget(hmUI.widget.FILL_RECT, 
       Object.assign(lcdIndPos,{
@@ -155,21 +145,11 @@ WatchFace({
       logger.log('click down');
   });
 
-/*  const screen = new Screen();
-  screen.onChange( () => {
-//    if (timerId) { // && screen.getStatus() == 2) {
-  //   clearTimeout(timerId);
-  //    timerId = null;
-      for (let i = 0; i < statusWid.length; ++i)
-        statusWid[i].setProperty(hmUI.prop.VISIBLE, i == 0);
-  });*/
-
-   //hmUI.createWidget(hmUI.widget.GROUP, lcdIndPos); 
     const battLowInd = hmUI.createWidget(hmUI.widget.IMG_ANIM, {
-      x: lcdIndPos.x + 10,
-      y: lcdIndPos.y + 4,
-      anim_path: 'lcd_ind/bat_low',
-      anim_prefix: 'bat_low',
+      x: lcdIndPos.x,
+      y: lcdIndPos.y + 7,
+      anim_path: 'lcd_ind/lowbat',
+      anim_prefix: 'lcd_lowbat',
       anim_ext: 'png',
       anim_fps: 1,
       anim_size: 2,
@@ -178,15 +158,15 @@ WatchFace({
       show_level: hmUI.show_level.ONLY_NORMAL
     });
     const aodBattLowInd = hmUI.createWidget(hmUI.widget.IMG, {
-      x: lcdIndPos.x + 10,
-      y: lcdIndPos.y + 4,
-      src: 'lcd_ind/bat_low/bat_low_0.png',
+      x: lcdIndPos.x,
+      y: lcdIndPos.y + 7,
+      src: 'lcd_ind/lowbat/lcd_lowbat_0.png',
       show_level: hmUI.show_level.ONLY_AOD
     });       
 
     const battery = new Battery();
     const batteryStatusIndUpdate = function() {
-      const isLow = battery.getCurrent() < 15;
+      const isLow = battery.getCurrent() <= 15;
       battLowInd.setProperty(hmUI.prop.VISIBLE, isLow);
       aodBattLowInd.setProperty(hmUI.prop.VISIBLE, isLow);
     };
@@ -196,15 +176,15 @@ WatchFace({
     hmUI.createWidget(hmUI.widget.TIME_POINTER, {
       hour_centerX: 240,
       hour_centerY: 240,
-      hour_posX: 21,
-      hour_posY: 117,
+      hour_posX: 20,
+      hour_posY: 240,
       hour_path: 'aod_h_hand.png',
       hour_cover_x: 0,
       hour_cover_y: 0,
       minute_centerX: 240,
       minute_centerY: 240,
-      minute_posX: 21,
-      minute_posY: 195,
+      minute_posX: 20,
+      minute_posY: 240,
       minute_path: 'aod_m_hand.png',
       enable: false,
       show_level: hmUI.show_level.ONLY_AOD
@@ -213,40 +193,54 @@ WatchFace({
     hmUI.createWidget(hmUI.widget.TIME_POINTER, {
       hour_centerX: 240,
       hour_centerY: 240,
-      hour_posX: 21,
-      hour_posY: 117,
+      hour_posX: 20,
+      hour_posY: 240,
       hour_path: 'h_hand.png',
       hour_cover_x: 0,
       hour_cover_y: 0,
       minute_centerX: 240,
       minute_centerY: 240,
-      minute_posX: 21,
-      minute_posY: 195,
+      minute_posX: 20,
+      minute_posY: 240,
       minute_path: 'm_hand.png',
       minute_cover_x: 0,
       minute_cover_y: 0,
-/*      second_centerX: 240,
+      second_centerX: 240,
       second_centerY: 240,
-      second_posX: 12,
-      second_posY: 178,
+      second_posX: 11,
+      second_posY: 240,
       second_path: 's_hand.png',
       second_cover_x: 0,
       second_cover_y: 0,
-      enable: false,*/
+      enable: false,
       show_level: hmUI.show_level.ONLY_NORMAL
     }); 
 
-    hmUI.createWidget(hmUI.widget.IMG, {
-      x: 0,
-      y: 0,
+/*    let secAngle = () => Date.now() % 60000 * 6 / 1000; 
+    let secHandle = hmUI.createWidget(hmUI.widget.IMG, {
+      x: 0, //240-13,
+      y: 0, //240-178,
+      w: 480,
+      h: 480,
       src: "s_hand.png",
-      pos_x: 12,
-      pos_y: 178,
+      pos_x: 240-13,
+      pos_y: 240-178,
       center_x: 240,
-      center_y: 240
+      center_y: 240,
+      angle: secAngle(),
+      show_level: hmUI.show_level.ONLY_NORMAL
     });
-    
-    hmUI.createWidget(hmUI.widget.FILL_RECT, {
+
+    logger.log('calling setInterval');
+    let x = 0;
+    setInterval( () => {
+      secHandle.setProperty(hmUI.prop.MORE, {
+        angle: secAngle()
+      });
+      //hmUI.redraw();
+    },100);*/
+
+    /*hmUI.createWidget(hmUI.widget.FILL_RECT, {
       x: 0,
       y: 0,
       w: 480,
@@ -254,7 +248,7 @@ WatchFace({
       color: "0x000000",
       alpha: 0x80,
       show_level: hmUI.show_level.ONLY_AOD,
-    });
+    });*/
 
 
   },
