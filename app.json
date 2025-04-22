@@ -5,8 +5,8 @@
     "appName": "P-Tek",
     "appType": "watchface",
     "version": {
-      "code": 4,
-      "name": "2.0.0"
+      "code": 5,
+      "name": "2.5.0"
     },
     "vender": "Sebo",
     "description": "Classic, pro-trek inspired watchface.",
