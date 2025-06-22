@@ -100,6 +100,11 @@ export class LCDWidget {
         this.activeWidget = 0;
     }
 
+    updateBatteryLowInd() {
+        if (this._updateBatteryLowInd)
+            this._updateBatteryLowInd();
+    }
+
     _createDateWidget(aod) {
 
         const dateWidget = hmUI.createWidget(hmUI.widget.GROUP, lcdPosition);
@@ -146,7 +151,7 @@ export class LCDWidget {
 
         const battery = new Battery();
 
-        const batteryChange = () => {
+        this._updateBatteryLowInd = () => {
             const isLow = battery.getCurrent() < BATT_LOW_THRES;
             battLowInd.setProperty(hmUI.prop.VISIBLE, isLow);
             if (!aod)
@@ -154,8 +159,8 @@ export class LCDWidget {
                     isLow? hmUI.anim_status.START: hmUI.anim_status.STOP);
             
             };    
-        battery.onChange( batteryChange);
-        batteryChange();
+        battery.onChange( this._updateBatteryLowInd);
+        this._updateBatteryLowInd();
     }
 
 }

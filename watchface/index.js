@@ -19,6 +19,7 @@ WatchFace({
     });
 
     this.lcd.init(true);
+    this.resumeCallbacks.push( () => this.lcd.updateBatteryLowInd() );
 
     hmUI.createWidget(hmUI.widget.TIME_POINTER, {
       hour_centerX: px(240),
@@ -58,6 +59,7 @@ WatchFace({
     });
 
     this.lcd.init();
+    
     this.lcd.createWidget( hmUI.data_type.BATTERY,'lcd_ind/lcd_bat.png',"numbers/unit_perc.png");
     this.lcd.createWidget( hmUI.data_type.WEATHER_CURRENT,'lcd_ind/lcd_temp.png',"numbers/unit_c.png","numbers/unit_f.png");
     this.lcd.createWidget( hmUI.data_type.STEP,'lcd_ind/lcd_steps.png');
@@ -98,6 +100,7 @@ WatchFace({
 
     this.lcd.createButton(false);
     this.pauseCallbacks.push( () => this.lcd.reset() );
+    this.resumeCallbacks.push( () => this.lcd.updateBatteryLowInd() );
   },
 
   buildSmoothSecondHand() {
